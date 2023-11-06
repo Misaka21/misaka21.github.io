@@ -1,0 +1,806 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Misaka21">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="在学院的项目二中用到了这块Nvidia Jetson TX2开发板，在查阅完无数号称『亲自实践』的低质资料，踩过了无数坑。故作此文章，给自己后续刷机留个文档，也给后人留个教程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TX2刷机">
+<meta property="og:url" content="http://example.com/2023/TX2%E5%88%B7%E6%9C%BA/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="在学院的项目二中用到了这块Nvidia Jetson TX2开发板，在查阅完无数号称『亲自实践』的低质资料，踩过了无数坑。故作此文章，给自己后续刷机留个文档，也给后人留个教程">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/TX2%E5%88%B7%E6%9C%BA/image-20230805181713316.png">
+<meta property="og:image" content="http://example.com/TX2%E5%88%B7%E6%9C%BA/image-20230805181937157.png">
+<meta property="og:image" content="http://example.com/TX2%E5%88%B7%E6%9C%BA/image-20230805182204019.png">
+<meta property="og:image" content="http://example.com/TX2%E5%88%B7%E6%9C%BA/image-20231027191102553.png">
+<meta property="og:image" content="http://example.com/TX2%E5%88%B7%E6%9C%BA/image-20231106142633009.png">
+<meta property="og:image" content="http://example.com/TX2%E5%88%B7%E6%9C%BA/image-20231106134539141.png">
+<meta property="og:image" content="http://example.com/TX2%E5%88%B7%E6%9C%BA/image-20231106140523563.png">
+<meta property="og:image" content="http://example.com/TX2%E5%88%B7%E6%9C%BA/image-20231106140850286.png">
+<meta property="og:image" content="http://example.com/TX2%E5%88%B7%E6%9C%BA/image-20231106142348120.png">
+<meta property="og:image" content="http://example.com/TX2%E5%88%B7%E6%9C%BA/image-20231106141732873.png">
+<meta property="article:published_time" content="2023-07-28T04:47:19.000Z">
+<meta property="article:modified_time" content="2023-11-06T06:30:04.187Z">
+<meta property="article:author" content="Misaka21">
+<meta property="article:tag" content="项目课">
+<meta property="article:tag" content="TX2">
+<meta property="article:tag" content="视觉">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://example.com/TX2%E5%88%B7%E6%9C%BA/image-20230805181713316.png">
+  
+  
+  
+  <title>TX2刷机 - Hexo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.5-a","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="TX2刷机"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-07-28 12:47" pubdate>
+          2023年7月28日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">TX2刷机</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>在学院的项目二中用到了这块Nvidia Jetson TX2开发板，在查阅完无数号称『亲自实践』的低质资料，踩过了无数坑。故作此文章，给自己后续刷机留个文档，也给后人留个教程</p>
+<span id="more"></span>
+
+<h2 id="零、刷机准备"><a href="#零、刷机准备" class="headerlink" title="零、刷机准备"></a>零、刷机准备</h2><blockquote>
+<ul>
+<li><p>Ubuntu 18.04的虚拟机</p>
+</li>
+<li><p>NVIDIA SDK Manager</p>
+</li>
+<li><p>micro USB数据线(非充电线)</p>
+</li>
+<li><p><em>两根RJ45网线(可选)</em></p>
+</li>
+<li><p><em>路由器(可选)</em></p>
+</li>
+</ul>
+</blockquote>
+<h2 id="一、安装SDK-Manager"><a href="#一、安装SDK-Manager" class="headerlink" title="一、安装SDK Manager"></a>一、安装SDK Manager</h2><ol>
+<li><p>刷机前需要准备一台<strong>装有ubuntu18.04的虚拟机</strong>，版本不能超过18.04，否则无法安装。虚拟机需要连网和至少20GB的磁盘空间。建议分配100GB。</p>
+</li>
+<li><p>在这台主机上下载SDK Manager，下载链接在<a target="_blank" rel="noopener" href="https://developer.nvidia.cn/sdk-manager">这里</a>，选择Ubuntu的.deb下载。Docker的我没试过，有兴趣的可以试一下，有空开个坑讲讲Docker。</p>
+</li>
+</ol>
+<p>下载好后在同一文件夹下打开终端，输入<code>sudo dpkg -i 软件包名.deb</code>,如：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">sudo dpkg -i sdkmanager_1.9.2-10884_amd64.deb<br></code></pre></td></tr></table></figure>
+
+<p>* 输入密码时没有显示，直接回车就行。</p>
+<p>安装完虚拟机之后，你需要下载 SDKManager 的deb文件进行安装。如果你是新建的虚拟机直接安装 SDKManager ，你会遇到形如以下的报错，根据提示安装所需的依赖库。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs sh">huo@ubuntu:~/Downloads$ sudo dpkg -i sdkmanager_1.6.1-8175_amd64.deb <br>[sudo] password <span class="hljs-keyword">for</span> huo: <br>Selecting previously unselected package sdkmanager. <br>(Reading database ... 151187 files and directories currently installed.) <br>Preparing to unpack sdkmanager_1.6.1-8175_amd64.deb ... <br>Unpacking sdkmanager (1.6.1-8175) ... <br>dpkg: dependency problems prevent configuration of sdkmanager: <br> sdkmanager depends on libgconf-2-4; however: <br>  Package libgconf-2-4 is not installed. <br> sdkmanager depends on libcanberra-gtk-module; however: <br>  Package libcanberra-gtk-module is not installed. <br>dpkg: error processing package sdkmanager (--install): <br>dependency problems - leaving unconfigured <br>Processing triggers <span class="hljs-keyword">for</span> gnome-menus (3.13.3-11ubuntu1.1) ... <br>Processing triggers <span class="hljs-keyword">for</span> desktop-file-utils (0.23-1ubuntu3.18.04.2) ... <br>Processing triggers <span class="hljs-keyword">for</span> mime-support (3.60ubuntu1) ... <br>Processing triggers <span class="hljs-keyword">for</span> hicolor-icon-theme (0.17-2) ... <br>Errors were encountered <span class="hljs-keyword">while</span> processing: <br>sdkmanager<br></code></pre></td></tr></table></figure>
+
+<p>输入以下指令修复缺失的依赖库：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">sudo apt --fix-broken install<br></code></pre></td></tr></table></figure>
+
+<p>再次安装SDKManager deb文件。</p>
+<ol start="3">
+<li>安装好后打开，需要自己去官网注册一个账号，注册一个就行了。用micro USB线连接TX2，可能会弹下面这个框</li>
+</ol>
+<p><img src="/./TX2%E5%88%B7%E6%9C%BA/image-20230805181713316.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果没有，在虚拟机-&gt;可移动设备-&gt;NVIDIA Linux for Tegra-&gt;点击断开与主机的连接</p>
+<p><img src="/./TX2%E5%88%B7%E6%9C%BA/image-20230805181937157.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="二、安装系统"><a href="#二、安装系统" class="headerlink" title="二、安装系统"></a>二、安装系统</h2><p>一切准备就绪，打开后将会看到大概这样的界面，选择你想选择的，Host Machine 不需要点(这将不会在你的虚拟机上安装cuda，反正安装也会报错)，DeepL可以不装。</p>
+<p><img src="/./TX2%E5%88%B7%E6%9C%BA/image-20230805182204019.png" srcset="/img/loading.gif" lazyload></p>
+<p>接着</p>
+<p><img src="/./TX2%E5%88%B7%E6%9C%BA/image-20231027191102553.png" srcset="/img/loading.gif" lazyload></p>
+<p>等待下载完成，就可以开始安装了</p>
+<p><img src="/./TX2%E5%88%B7%E6%9C%BA/image-20231106142633009.png" srcset="/img/loading.gif" lazyload alt="image-20231106142633009"></p>
+<p>选择Manual Setup，输入想要给tx2设置的用户名密码，密码越简单越好，最好也别有数字。</p>
+<p>TX2进入刷机模式的方法是：一直按着Recovery按钮，然后点按一下Reset，松开Recovery按钮。</p>
+<p>接着虚拟机可能问你将usb连接到哪里，迅速选择连接到Ubuntu，接着就可以点击Flash进行刷机了</p>
+<p>但是有的TX在安装之后会出现error,并且报的是如下<code>UTF8 codec can&#39;t..</code>的错误后，说明你TX需要用命令行刷机。</p>
+<p><img src="/./TX2%E5%88%B7%E6%9C%BA/image-20231106134539141.png" srcset="/img/loading.gif" lazyload alt="image-20231106134539141"></p>
+<p>找到之前下载的目录，我的是</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">huo@ubuntu:~/nvidia/nvidia_sdk/JetPack_4.6.4_Linux_JETSON_TX2_TARGETS/Linux_for_Tegra$ <br></code></pre></td></tr></table></figure>
+
+<p>接着在该文件夹中打开终端，输入命令开始刷机:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo ./flash.sh jetson-tx2 mmcblk0p1<br></code></pre></td></tr></table></figure>
+
+<h2 id="三、安装CUDA-TensorRT等SDK"><a href="#三、安装CUDA-TensorRT等SDK" class="headerlink" title="三、安装CUDA,TensorRT等SDK"></a>三、安装CUDA,TensorRT等SDK</h2><p>如果用刷机软件完成第二步后，不要进入下一步</p>
+<p>如果是用命令刷完后，先按reset键重启TX2，再连接显示器，设置用户名密码，进入桌面。</p>
+<p>接着重新打开sdkmanager，在这个页面点击skip</p>
+<p><img src="/./TX2%E5%88%B7%E6%9C%BA/image-20231106140523563.png" srcset="/img/loading.gif" lazyload alt="image-20231106140523563"></p>
+<p>接着，不管是用SDKManager还是用命令刷机，都应该看到这个页面：</p>
+<p><img src="/./TX2%E5%88%B7%E6%9C%BA/image-20231106140850286.png" srcset="/img/loading.gif" lazyload alt="image-20231106140850286"></p>
+<p>这边选择usb，ip填写tx2的ip，如何填写请参考下文。</p>
+<p>username和password填写给TX2设置的用户名密码。</p>
+<p>当然也可能出现这个问题：</p>
+<p><img src="/./TX2%E5%88%B7%E6%9C%BA/image-20231106142348120.png" srcset="/img/loading.gif" lazyload alt="image-20231106142348120"></p>
+<p>打开命令行，输入：</p>
+<p>等待进度条跑满，结束。</p>
+<h4 id="注："><a href="#注：" class="headerlink" title="注："></a>注：</h4><p>tx2需要和虚拟机连在同一个网络内，目前试下来比较好的方法是：虚拟机开启桥接模式，tx2通过网线连接虚拟机。</p>
+<p>其中，虚拟机查看ip的方法为命令行中输入<code>ifconfig</code>,<code>Eth0</code>中的ip就是tx的ip</p>
+<p><img src="/./TX2%E5%88%B7%E6%9C%BA/image-20231106141732873.png" srcset="/img/loading.gif" lazyload alt="image-20231106141732873"></p>
+<h2 id="附录一、安装opencv-c-环境"><a href="#附录一、安装opencv-c-环境" class="headerlink" title="附录一、安装opencv c++环境"></a>附录一、安装opencv c++环境</h2><h2 id="附录二、配置工业相机"><a href="#附录二、配置工业相机" class="headerlink" title="附录二、配置工业相机"></a>附录二、配置工业相机</h2><h2 id="附录三、配置串口通信"><a href="#附录三、配置串口通信" class="headerlink" title="附录三、配置串口通信"></a>附录三、配置串口通信</h2><h2 id="附录四、设置开机自启动"><a href="#附录四、设置开机自启动" class="headerlink" title="附录四、设置开机自启动"></a>附录四、设置开机自启动</h2><p>当你需要开启TX2的时候就启动编写的代码，可以设置自启动程序。自启动程序一般是一个<code>.sh</code>文件，也就是脚本文件。</p>
+<h3 id="1-下载expect工具"><a href="#1-下载expect工具" class="headerlink" title="1.下载expect工具"></a>1.下载expect工具</h3><p>我由于要打开串口，因此需要能够处理<code>sudo</code>命令，这里可以使用<code>expect</code>工具来自动输入密码，但要注意，这种做法可能存在安全隐患，因此不建议在不安全的电脑上使用</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh">sudo apt-get install expect<br></code></pre></td></tr></table></figure>
+
+<h3 id="2-创建脚本文件"><a href="#2-创建脚本文件" class="headerlink" title="2.创建脚本文件"></a>2.创建脚本文件</h3><p>新建一个自启动文件<code>start.sh</code>，放在home目录下，我新建的脚本内容如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-meta">#!/bin/bash</span><br><br><span class="hljs-comment"># 使用expect工具执行需要密码的命令</span><br>/usr/bin/expect &lt;&lt;<span class="hljs-string">EOD</span><br><span class="hljs-string">spawn sudo chmod 777 /dev/ttyTHS2</span><br><span class="hljs-string">expect &quot;password:&quot;</span><br><span class="hljs-string">send &quot;密码密码密码\r&quot;</span><br><span class="hljs-string">expect eof</span><br><span class="hljs-string">EOD</span><br><br><span class="hljs-comment"># 运行haha.py</span><br>python3 /home/huo/Desktop/yolov5-master/haha.py<br></code></pre></td></tr></table></figure>
+
+<p>**#!**是一个特殊标记，说明这是一个可执行的脚本。除了第一行，其他以#开头的都不再生效，为注释。</p>
+<p>#!后面是脚本的解释器程序路径。这个程序可以是shell，程序语言或者其他通用程序，常用的是bash，sh。</p>
+<p><code>&lt;&lt;EOD</code> 是在 shell 脚本中使用的一种称为 “here document” 或 “heredoc” 的技术。这是一种在命令行和脚本中嵌入一个多行字符串的方法。<code>EOD</code> 只是一个标识符，您可以使用其他任何单词来代替，只要开头和结尾的标识符匹配即可。</p>
+<p><code>&lt;&lt;EOD</code> 告诉 shell，直到它再次遇到单独的 <code>EOD</code>（或您选择的任何其他标识符）为止，所有接下来的行都应该被读取并发送到前面的命令作为输入。</p>
+<p>例如，在使用 <code>expect</code> 工具时，您可能会这样写：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs bash">/usr/bin/expect &lt;&lt;<span class="hljs-string">EOD</span><br><span class="hljs-string">spawn sudo some_command</span><br><span class="hljs-string">expect &quot;password:&quot;</span><br><span class="hljs-string">send &quot;mypassword\r&quot;</span><br><span class="hljs-string">expect eof</span><br><span class="hljs-string">EOD</span><br></code></pre></td></tr></table></figure>
+
+<p>上述脚本中：</p>
+<ol>
+<li>用 <code>spawn</code> 开始一个 <code>sudo some_command</code> 进程。</li>
+<li>然后，它等待看到 “password:” 提示。</li>
+<li>一旦看到该提示，它发送 “mypassword” 以及一个回车（<code>\r</code>）。</li>
+<li>最后，它等待命令结束。</li>
+</ol>
+<p>这里的 <code>EOD</code> 只是一个常用的标识符，您可以替换为其他任何词，例如 <code>&lt;&lt;ENDTEXT</code> 和 <code>ENDTEXT</code> 或 <code>&lt;&lt;ANYTHING</code> 和 <code>ANYTHING</code>，关键是开始和结束的标识符必须匹配。</p>
+<h3 id="3-为脚本添加执行权限："><a href="#3-为脚本添加执行权限：" class="headerlink" title="3.为脚本添加执行权限："></a>3.为脚本添加执行权限：</h3><p>在终端中输入命令：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sh"><span class="hljs-built_in">chmod</span> +x start.sh<br></code></pre></td></tr></table></figure>
+
+<p>​	<code>chmod</code> 是一个 Unix 和 Linux 系统中用于更改文件或目录权限的命令。<code>chmod +x</code> 用于给文件增加“执行”权限。</p>
+<p>具体来说：</p>
+<ul>
+<li><code>chmod</code> 代表 “change mode”，用于设置文件或目录的权限。</li>
+<li><code>+</code> 代表增加权限。</li>
+<li><code>x</code> 代表“执行”权限。</li>
+</ul>
+<p>当您使用 <code>chmod +x</code> 命令并跟上一个文件名，例如 <code>chmod +x filename.sh</code>，您就为该文件赋予了执行权限。这意味着该文件（通常是一个脚本或可执行程序）现在可以被用户直接运行。</p>
+<p>例如，对于一个名为 <code>script.sh</code> 的 bash 脚本，如果您想让其具有执行权限，您可以使用以下命令：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs applescript">bashCopy code<br>chmod +x <span class="hljs-keyword">script</span>.sh<br></code></pre></td></tr></table></figure>
+
+<p>之后，您可以使用 <code>./script.sh</code> 命令直接运行该脚本。</p>
+<p>为文件添加执行权限是确保该文件可以被执行的常见步骤，特别是在下载或创建新的脚本文件后。</p>
+<h3 id="4-将脚本设为开机自启动"><a href="#4-将脚本设为开机自启动" class="headerlink" title="4.将脚本设为开机自启动"></a>4.将脚本设为开机自启动</h3><p>4.打开终端，在终端中执行<code>gnome-session-properties</code>,会弹出一个“启动应用程序首选项”的菜单,点击添加。其中，Name和Comment根据自己的实际情况填写，Command中填写开机时需要运行的文件位置，在这里我们输入：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">gnome-terminal -x /home/huo/start.sh	# 开机启动start.sh文件<br></code></pre></td></tr></table></figure>
+
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E6%8A%80%E6%9C%AF/" class="category-chain-item">技术</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E9%A1%B9%E7%9B%AE%E8%AF%BE/" class="print-no-link">#项目课</a>
+      
+        <a href="/tags/TX2/" class="print-no-link">#TX2</a>
+      
+        <a href="/tags/%E8%A7%86%E8%A7%89/" class="print-no-link">#视觉</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>TX2刷机</div>
+      <div>http://example.com/2023/TX2刷机/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Misaka21</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年7月28日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2023/%E9%A1%B9%E7%9B%AE%E4%BA%8C%E6%80%BB%E7%BB%93/" title="项目二总结">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">项目二总结</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/STM32_Programming_Guidelines/" title="单片机编程规范">
+                        <span class="hidden-mobile">单片机编程规范</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="valine"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#valine', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/valine/1.5.1/Valine.min.js', function() {
+        var options = Object.assign(
+          {"appId":"jxppwVH6f51cIZmR0vdKSS4E-MdYXbMMI","appKey":"1dheN8lJoaUO4gPYmuZW1sje","path":"window.location.pathname","placeholder":null,"avatar":"retro","meta":["nick","mail","link"],"requiredFields":[],"pageSize":10,"lang":"zh-CN","highlight":false,"recordIP":false,"serverURLs":"","emojiCDN":null,"emojiMaps":null,"enableQQ":false},
+          {
+            el: "#valine",
+            path: window.location.pathname
+          }
+        )
+        new Valine(options);
+        Fluid.utils.waitElementVisible('#valine .vcontent', () => {
+          var imgSelector = '#valine .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
